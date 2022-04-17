@@ -1,0 +1,6 @@
+# 日本語 文字列 go here for Rails i18n
+ja:
+  # my_label: "My label"
+  created_by: "登録者"
+  updated_by: "更新者"
+  with_notes: "コメントあり"

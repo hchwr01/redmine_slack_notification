@@ -1,0 +1,6 @@
+# English strings go here for Rails i18n
+en:
+  # my_label: "My label"
+  created_by: "created by"
+  updated_by: "updated by"
+  with_notes: "with notes"
