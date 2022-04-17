@@ -19,9 +19,6 @@ class IssueHook < Redmine::Hook::Listener
 		#return unless url and channel and operation
 		return unless url and operation
 
-        journal          = context[:journal]
-        assigned_slackId = setUserSlackID User.find(issue.assigned_to.id)
-
 		attachment = {}
 		attachment[:text] = issue.description if issue.description
 		attachment[:fields] = [ {
@@ -38,12 +35,14 @@ class IssueHook < Redmine::Hook::Listener
 			:short => true
 		}]
 
+        journal   = context[:journal]
         notes_url = obj_url(journal) if !journal.nil? && journal.notes.present?
         msg = "<#{obj_url issue}|[#{issue.project}]#{issue}>"+ (notes_url.blank? ? "" : " <#{notes_url}|[#{l(:with_notes)}]>") +"\n#{operation} #{issue.author}"
 
         notifier = Slack::Notifier.new url
 
-        if (issue.assigned_to.login != journal.user.login) && assigned_slackId.present?
+        assigned_slackId = setUserSlackID User.find(issue.assigned_to.id)
+        if (issue.assigned_to.id != User.current.id) && assigned_slackId.present?
             notifier.post text: "<@#{assigned_slackId}>\n" + msg, attachments: [attachment]
         else
             notifier.post text: msg, attachments: [attachment]
